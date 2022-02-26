@@ -1,3 +1,96 @@
+@import url('https://fonts.googleapis.com/css2?family=Prompt&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Prompt', sans-serif;
+}
+
+body {
+  height: 100vh;
+  background: linear-gradient(45deg, #2daec1, #115488);
+  overflow: hidden;
+  background-size: 400% 400%;
+  animation: gradient 8s ease infinite;
+  color: white;
+}
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.img {
+  position: absolute;
+  width: 420px;
+  height: 430px;
+  background: linear-gradient(
+    141.25deg,
+    rgba(255, 255, 255, 0.03) 1.33%,
+    rgba(255, 255, 255, 0.24) 105.77%
+  );
+  backdrop-filter: blur(3px);
+  /* Note: backdrop-filter has minimal browser support */
+  border-radius: 20px;
+
+  border: 5px;
+  color: #fff;
+
+  background-clip: padding-box; /* !importanté */
+  border: solid border transparent; /* !importanté */
+  border-radius: 1em;
+  /* border: 5px solid;
+  border-image-source: linear-gradient(136.79deg, #EB5757 -1.89%, #2AFB3F 102.62%); */
+}
+.i1 {
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  /* background-size: cover; */
+  background: url('../assets/img1.png');
+}
+.c1 {
+  left: 203px;
+  top: 202.71px;
+}
+.c2 {
+  left: 495px;
+  top: 141.04px;
+}
+.c3 {
+  left: 801.81px;
+  top: 94px;
+}
+.i3 {
+  background: url('../assets/img2.png');
+}
+.i2 {
+  background: url('../assets/img3.png');
+}
+
+.border {
+  background-color: linear-gradient(
+    to right,
+    rgb(134, 239, 172),
+    rgb(253, 224, 71),
+    rgb(249, 168, 212)
+  );
+}
+
+.para {
+  background: linear-gradient(95.03deg, #eb5757 -4.24%, #f2c94c 110.9%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 5px 0.5em orange;
+}
+.para:hover {
+  text-decoration: underline;
+}
