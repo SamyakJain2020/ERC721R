@@ -28,7 +28,7 @@ const Home: NextPage = () => {
           ERC721R is a Sprint NFT Launcher contract through which you can create and launch a REFUNDABLE NFT Collection
         </p>
         <div className="flex p-5 ">
-          <Link href="/">
+          <Link href="/input">
             <button className="m-5 cursor-pointer  rounded border bg-gradient-to-r from-pink-500/70 to-yellow-500/50 py-2 px-4 font-semibold text-white shadow-lg shadow-red-500 hover:shadow-md hover:shadow-yellow-300/50">
               Get Started
             </button>
