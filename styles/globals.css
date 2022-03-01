@@ -12,10 +12,12 @@
 body {
   height: 100vh;
   background: linear-gradient(45deg, #2daec1, #115488);
-  overflow: hidden;
   background-size: 400% 400%;
   animation: gradient 8s ease infinite;
   color: white;
+}
+.home{
+  overflow: hidden;
 }
 @keyframes gradient {
   0% {
