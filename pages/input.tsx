@@ -13,8 +13,6 @@ import { clearConfigCache } from 'prettier'
 // import { HardhatConfig } from 'hardhat/types'
 
 
-
-
 const Home: NextPage = () => {
     const [name, setname] = useState("")
     const [symbol, setsymbol] = useState("")

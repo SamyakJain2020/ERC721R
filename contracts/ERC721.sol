@@ -368,11 +368,10 @@ contract ERC721R is   Context, ERC165, IERC721, IERC721Metadata, IERC721Enumerab
     ) public virtual payable maxMintsPerAdd(quantity){
        require(msg.value >= mintPrice, "value is less than mint price");
         _mint(to, quantity, "", true);
-       if(totalSupply() < 100) {
+       if(totalSupply() < luckyMinters) {
         eligibleForReward[msg.sender] = true;
        }
     }
-
     function claimRefund() public {
         require(block.timestamp > mintEndTime, "mint not ended yet");
         require(totalSupply() < collectionSize, "not eligible for refund");
