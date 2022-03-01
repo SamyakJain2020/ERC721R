@@ -25,8 +25,7 @@ const Home: NextPage = () => {
           ERC721R, a new way of launching NFT collections
         </h1>
         <p className="m-10 text-xl">
-          ERC721R is a sprint NFT launcher contract through which you can launch
-          your own NFT collection, but not norm
+          ERC721R is a Sprint NFT Launcher contract through which you can create and launch a REFUNDABLE NFT Collection
         </p>
         <div className="flex p-5 ">
           <Link href="/">
