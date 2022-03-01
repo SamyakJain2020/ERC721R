@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-
 import { ethers, providers } from 'ethers'
 
 const Navbar = ({}) => {

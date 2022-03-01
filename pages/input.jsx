@@ -1,19 +1,15 @@
-import type { NextPage } from 'next'
+// import  { NextPage } from 'next'
 import Head from 'next/head'
-import Link from 'next/link'
-import Svg from '../assets/Group13.svg'
-import Navbar from '../components/Navbar'
-import Image from 'next/image'
+// import Link from 'next/link'
+// import Svg from '../assets/Group13.svg'
+// import Navbar from '../components/Navbar'
+// import Image from 'next/image'
 import { useState, useEffect } from 'react'
 import { ethers } from 'ethers';
-// import { hrtime } from 'process'
-import hre from 'hardhat';
 import ERC721 from '../assets/ERC721R.json';
-import { clearConfigCache } from 'prettier'
-// import { HardhatConfig } from 'hardhat/types'
 
 
-const Home: NextPage = () => {
+const Home = () => {
     const [name, setname] = useState("")
     const [symbol, setsymbol] = useState("")
     const [collectionSize, setcollectionSize] = useState(null)
