@@ -85,8 +85,20 @@ const Home = () => {
     let erc721 = new ethers.ContractFactory(ERC721.abi, ERC721.bytecode, signer);
     // let txn = await erc721.deploy("ERC721R", "R-C", 5000, 1, 1645518868, 1645519008, 100000000000000, "ipfs://QmXLrHE5QRRC1PYXNBqfkguuYc7DvKhboNp1BQDZLJGhjV/");
     let price = ethers.utils.parseEther(mintPrice.toString());
-    let txn = await erc721.deploy(name, symbol, collectionSize, maxMintPerAddress, mintStartTime, mintEndTime, mintPrice, "ipfs://QmXLrHE5QRRC1PYXNBqfkguuYc7DvKhboNp1BQDZLJGhjV/");
+
+    console.log(name)
+    console.log(symbol)
+    console.log(collectionSize)
+    console.log(maxMintPerAddress)
+    console.log(mintStartTime)
+    console.log(mintEndTime)
+    console.log(price)
+    console.log(baseURI)
+    
+    let txn = await erc721.deploy(name, symbol, collectionSize, maxMintPerAddress, mintStartTime, mintEndTime, price, "ipfs://QmXLrHE5QRRC1PYXNBqfkguuYc7DvKhboNp1BQDZLJGhjV/");
     // let receipt = await txn.wait();
+    await txn.deployed();
+  
     console.log("txn ",txn)
     console.log("txn ",txn.address)
     setAddress(txn.address);
