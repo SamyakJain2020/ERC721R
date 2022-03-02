@@ -13,21 +13,24 @@ body {
   height: 100vh;
   color: white;
   background-size: 400% 400%;
+  background: linear-gradient(to right, rgb(165, 243, 252), rgb(34, 211, 238));
   animation: gradient 8s ease infinite;
   /* background: linear-gradient(45deg, #22e41b, #da1f19); */
-  background:linear-gradient(to right, rgb(56, 189, 248), rgb(251, 113, 133), rgb(163, 230, 53))
 }
 .home {
   overflow: hidden;
 }
 @keyframes gradient {
   0% {
-    background-position: 0% 50%;
+    /* background-position: 0% 50%; */
+    rotate: 0deg;
   }
   50% {
+    rotate: 180deg;
     background-position: 100% 50%;
   }
   100% {
+    rotate: 360deg;
     background-position: 0% 50%;
   }
 }

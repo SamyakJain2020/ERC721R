@@ -9,7 +9,7 @@ import { useState, useEffect } from 'react'
 import { ethers } from 'ethers'
 import ERC721 from '../assets/ERC721R.json'
 import { createTheme } from '@mui/material/styles'
-
+// import exec from 'child_process'
 const Home = () => {
   const [name, setname] = useState('')
   const [symbol, setsymbol] = useState('')
@@ -53,12 +53,12 @@ const Home = () => {
     }
   }
   // const theme = createTheme({
-    
+
   //     palette: {
   //       primary: deepOrange,
   //       secondary: yellow,
   //     },
-    
+
   // })
 
   const login = async () => {
@@ -128,6 +128,40 @@ const Home = () => {
     }
   }
 
+  // function getFile() {
+  //   var json_string = JSON.stringify(
+  //     { ans: 'hio my name is samyak' },
+  //     undefined,
+  //     2
+  //   )
+  //   var link = document.createElement('a')
+  //   link.download = 'MyNFT.sol'
+  //   var blob = new Blob([json_string], { type: 'text/plain' })
+  //   link.href = window.URL.createObjectURL(blob)
+  //   link.click()
+  // }
+
+  // function verifyContract() {
+  //   let price = ethers.utils.parseEther(mintPrice.toString())
+  //     console.log(name)
+  //     console.log(symbol)
+  //     console.log(collectionSize)
+  //     console.log(maxMintPerAddress)
+  //     console.log(mintStartTime)
+  //     console.log(mintEndTime)
+  //     console.log(price)
+  //     console.log(baseURI)
+  //   exec(
+  //     `npx hardhat verify --network polygon ${addressOfDeployedContract} ${name} ${symbol} ${collectionSize} ${maxMintPerAddress} ${mintStartTime} ${mintEndTime} ${price} ${'ipfs://QmXLrHE5QRRC1PYXNBqfkguuYc7DvKhboNp1BQDZLJGhjV/'} `,
+  //     function (error, stdout, stderr) {
+  //       console.log('stdout: ' + stdout)
+  //       console.log('stderr: ' + stderr)
+  //       if (error !== null) {
+  //         console.log('exec error: ' + error)
+  //       }
+  //     }
+  //   )
+  // }
   return (
     <div className="home">
       <Head>
@@ -150,98 +184,97 @@ const Home = () => {
       </nav>
 
       <main className=" flex w-full flex-col items-center justify-center gap-4 text-white ">
-        
-          <TextField
-            required
-            id="standard-required"
-            label="collection name"
-            defaultValue="Hello World"
-            variant="standard"
-            value={name}
-            onChange={(e) => setname(e.currentTarget.value)}
-            colour="secondary"
-          />
-          <TextField
-            required
-            id="standard-required"
-            label="collection Symbol"
-            defaultValue="Hello World"
-            variant="standard"
-            value={symbol}
-            placeholder=""
-            onChange={(e) => setsymbol(e.currentTarget.value)}
-          />
-          <TextField
-            required
-            id="standard-required"
-            label="baseURI"
-            defaultValue="Hello World"
-            variant="standard"
-            value={baseURI}
-            placeholder=""
-            onChange={(e) => setbaseURI(e.currentTarget.value)}
-          />
+        <TextField
+          required
+          id="standard-required"
+          label="collection name"
+          defaultValue="Hello World"
+          variant="standard"
+          value={name}
+          onChange={(e) => setname(e.currentTarget.value)}
+          colour="secondary"
+        />
+        <TextField
+          required
+          id="standard-required"
+          label="collection Symbol"
+          defaultValue="Hello World"
+          variant="standard"
+          value={symbol}
+          placeholder=""
+          onChange={(e) => setsymbol(e.currentTarget.value)}
+        />
+        <TextField
+          required
+          id="standard-required"
+          label="baseURI"
+          defaultValue="Hello World"
+          variant="standard"
+          value={baseURI}
+          placeholder=""
+          onChange={(e) => setbaseURI(e.currentTarget.value)}
+        />
 
-          <TextField
-            id="standard-number"
-            label="collection Size"
-            type="number"
-            value={collectionSize}
-            onChange={(e) => setcollectionSize(e.currentTarget.value)}
-            InputLabelProps={{
-              shrink: true,
-            }}
-            variant="standard"
-          />
-          <TextField
-            id="standard-number"
-            label="Max mint per address"
-            type="number"
-            value={maxMintPerAddress}
-            placeholder=""
-            onChange={(e) => setmaxMintPerAddress(e.currentTarget.value)}
-            InputLabelProps={{
-              shrink: true,
-            }}
-            variant="standard"
-          />
-          <TextField
-            id="standard-number"
-            label="Start time"
-            type="number"
-            value={mintStartTime}
-            placeholder=""
-            onChange={(e) => setmintStartTime(e.currentTarget.value)}
-            InputLabelProps={{
-              shrink: true,
-            }}
-            variant="standard"
-          />
-          <TextField
-            id="standard-number"
-            label="end time"
-            type="number"
-            value={mintEndTime}
-            placeholder=""
-            onChange={(e) => setmintEndTime(e.currentTarget.value)}
-            InputLabelProps={{
-              shrink: true,
-            }}
-            variant="standard"
-          />
-          <TextField
-            id="standard-number"
-            label="price in Matic"
-            type="number"
-            value={mintPrice}
-            placeholder=""
-            onChange={(e) => setmintPrice(e.currentTarget.value)}
-            InputLabelProps={{
-              shrink: true,
-            }}
-            variant="standard"
-          />
-       
+        <TextField
+          id="standard-number"
+          label="collection Size"
+          type="number"
+          value={collectionSize}
+          onChange={(e) => setcollectionSize(e.currentTarget.value)}
+          InputLabelProps={{
+            shrink: true,
+          }}
+          variant="standard"
+        />
+        <TextField
+          id="standard-number"
+          label="Max mint per address"
+          type="number"
+          value={maxMintPerAddress}
+          placeholder=""
+          onChange={(e) => setmaxMintPerAddress(e.currentTarget.value)}
+          InputLabelProps={{
+            shrink: true,
+          }}
+          variant="standard"
+        />
+        <TextField
+          id="standard-number"
+          label="Start time"
+          type="number"
+          value={mintStartTime}
+          placeholder=""
+          onChange={(e) => setmintStartTime(e.currentTarget.value)}
+          InputLabelProps={{
+            shrink: true,
+          }}
+          variant="standard"
+        />
+        <TextField
+          id="standard-number"
+          label="end time"
+          type="number"
+          value={mintEndTime}
+          placeholder=""
+          onChange={(e) => setmintEndTime(e.currentTarget.value)}
+          InputLabelProps={{
+            shrink: true,
+          }}
+          variant="standard"
+        />
+        <TextField
+          id="standard-number"
+          label="price in Matic"
+          type="number"
+          value={mintPrice}
+          placeholder=""
+          onChange={(e) => setmintPrice(e.currentTarget.value)}
+          InputLabelProps={{
+            shrink: true,
+          }}
+          variant="standard"
+        />
+
         {/* ipfs://QmXLrHE5QRRC1PYXNBqfkguuYc7DvKhboNp1BQDZLJGhjV/ */}
 
         <div className="flex p-5 ">
@@ -258,7 +291,7 @@ const Home = () => {
           TRANSACTION FAILED: {error.message}
         </p>
       )}
-      
+
       {isLoading && (
         <div className="flex items-center justify-center">loading....</div>
       )}
@@ -273,18 +306,36 @@ const Home = () => {
             `https://mumbai.polygonscan.com/address/${addressOfDeployedContract}
             `
           </a>{' '}
-      <h3>Steps You need To perform now.</h3>
-      <ol>
-        <li>
-          Verify your Contract collection address and click on the button
-          <a
-            href={`https://mumbai.polygonscan.com/verifyContract?a=${addressOfDeployedContract}`}
-            target="_black"
-          />
-        </li>
-      </ol>
+          <h3>Steps You need To perform now.</h3>
+          <ol>
+            <li>
+              Verify your Contract collection address and click on the button
+              <a
+                href={`https://mumbai.polygonscan.com/verifyContract?a=${addressOfDeployedContract}`}
+                target="_black"
+              />
+            </li>
+          </ol>
         </div>
       )}
+      {/* <div>
+        {' '}
+        <button className="m-4 bg-orange-500 p-4 text-xl" onClick={getFile}>
+          {' '}
+          GET MY FILE
+        </button>
+      </div> */}
+
+      {/* <div>
+        {' '}
+        <button
+          className="m-4 bg-orange-500 p-4 text-xl"
+          onClick={verifyContract}
+        >
+          {' '}
+          VERIFY CONTRACT
+        </button>
+      </div> */}
     </div>
   )
 }
