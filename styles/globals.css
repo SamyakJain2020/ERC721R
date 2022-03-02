@@ -11,12 +11,13 @@
 
 body {
   height: 100vh;
-  background: linear-gradient(45deg, #2daec1, #115488);
+  color: white;
   background-size: 400% 400%;
   animation: gradient 8s ease infinite;
-  color: white;
+  /* background: linear-gradient(45deg, #22e41b, #da1f19); */
+  background:linear-gradient(to right, rgb(56, 189, 248), rgb(251, 113, 133), rgb(163, 230, 53))
 }
-.home{
+.home {
   overflow: hidden;
 }
 @keyframes gradient {

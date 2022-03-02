@@ -1,33 +1,34 @@
 // import  { NextPage } from 'next'
 import Head from 'next/head'
 // import Link from 'next/link'
-// import Svg from '../assets/Group13.svg'
-// import Navbar from '../components/Navbar'
+import Box from '@mui/material/Box'
+import TextField from '@mui/material/TextField'
+
 // import Image from 'next/image'
 import { useState, useEffect } from 'react'
-import { ethers } from 'ethers';
-import ERC721 from '../assets/ERC721R.json';
-
+import { ethers } from 'ethers'
+import ERC721 from '../assets/ERC721R.json'
+import { createTheme } from '@mui/material/styles'
 
 const Home = () => {
-    const [name, setname] = useState("")
-    const [symbol, setsymbol] = useState("")
-    const [collectionSize, setcollectionSize] = useState(null)
-    const [maxMintPerAddress, setmaxMintPerAddress] = useState(null)
-    const [mintStartTime, setmintStartTime] = useState(null)
-    const [mintEndTime, setmintEndTime] = useState(null)
-    const [mintPrice, setmintPrice] = useState(null)
-    const [baseURI, setbaseURI] = useState("")
+  const [name, setname] = useState('')
+  const [symbol, setsymbol] = useState('')
+  const [collectionSize, setcollectionSize] = useState(null)
+  const [maxMintPerAddress, setmaxMintPerAddress] = useState(null)
+  const [mintStartTime, setmintStartTime] = useState(null)
+  const [mintEndTime, setmintEndTime] = useState(null)
+  const [mintPrice, setmintPrice] = useState(null)
+  const [baseURI, setbaseURI] = useState('')
 
-    const [addressOfDeployedContract, setAddress] = useState("")
+  const [addressOfDeployedContract, setAddress] = useState('')
 
-
-
-    const [account, setAccount] = useState(null)
+  const [account, setAccount] = useState(null)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [error, setError] = useState(null)
+  const [isLoading, setIsLoading] = useState(false)
 
   const checkWalletConnected = async () => {
-    const { ethereum } = window;
+    const { ethereum } = window
 
     if (!ethereum) {
       console.log('Install Metamask')
@@ -51,11 +52,19 @@ const Home = () => {
       console.log('Create a Ethereum Account')
     }
   }
+  // const theme = createTheme({
+    
+  //     palette: {
+  //       primary: deepOrange,
+  //       secondary: yellow,
+  //     },
+    
+  // })
 
   const login = async () => {
     try {
-      checkWalletConnected();
-      const { ethereum } = window;
+      checkWalletConnected()
+      const { ethereum } = window
 
       if (!ethereum) {
         console.log('Install Metamask')
@@ -72,91 +81,210 @@ const Home = () => {
     }
   }
 
-  // useEffect(checkWalletConnected, [])
-  // useEffect(login, []) //local storage
+  useEffect(checkWalletConnected, [])
+  useEffect(login, []) //local storage
 
   useEffect(() => {
     console.log(account)
   }, [account])
 
   async function createCollection() {
-    let provider = new ethers.providers.Web3Provider(window.ethereum);
-    let signer = await provider.getSigner();
-    let erc721 = new ethers.ContractFactory(ERC721.abi, ERC721.bytecode, signer);
+    setIsLoading(true)
+    let provider = new ethers.providers.Web3Provider(window.ethereum)
+    let signer = await provider.getSigner()
+    let erc721 = new ethers.ContractFactory(ERC721.abi, ERC721.bytecode, signer)
     // let txn = await erc721.deploy("ERC721R", "R-C", 5000, 1, 1645518868, 1645519008, 100000000000000, "ipfs://QmXLrHE5QRRC1PYXNBqfkguuYc7DvKhboNp1BQDZLJGhjV/");
-    let price = ethers.utils.parseEther(mintPrice.toString());
+    try {
+      let price = ethers.utils.parseEther(mintPrice.toString())
+      console.log(name)
+      console.log(symbol)
+      console.log(collectionSize)
+      console.log(maxMintPerAddress)
+      console.log(mintStartTime)
+      console.log(mintEndTime)
+      console.log(price)
+      console.log(baseURI)
 
-    console.log(name)
-    console.log(symbol)
-    console.log(collectionSize)
-    console.log(maxMintPerAddress)
-    console.log(mintStartTime)
-    console.log(mintEndTime)
-    console.log(price)
-    console.log(baseURI)
-    
-    let txn = await erc721.deploy(name, symbol, collectionSize, maxMintPerAddress, mintStartTime, mintEndTime, price, "ipfs://QmXLrHE5QRRC1PYXNBqfkguuYc7DvKhboNp1BQDZLJGhjV/");
-    // let receipt = await txn.wait();
-    await txn.deployed();
-  
-    console.log("txn ",txn)
-    console.log("txn ",txn.address)
-    setAddress(txn.address);
-    // console.log("receipt", receipt)
+      let txn = await erc721.deploy(
+        name,
+        symbol,
+        collectionSize,
+        maxMintPerAddress,
+        mintStartTime,
+        mintEndTime,
+        price,
+        'ipfs://QmXLrHE5QRRC1PYXNBqfkguuYc7DvKhboNp1BQDZLJGhjV/'
+      )
+      // let receipt = await txn.wait();
+      await txn.deployed()
+
+      console.log('txn ', txn)
+      console.log('txn ', txn.address)
+      setAddress(txn.address)
+      setIsLoading(false)
+      // console.log("receipt", receipt)
+    } catch (error) {
+      setError(error)
+    }
   }
 
   return (
     <div className="home">
-     
       <Head>
         <title>ERC721R Collection</title>
         <link rel="icon" href="/favicon.ico" />
-      </Head> 
+      </Head>
       <nav className="flex justify-around p-6 text-xl	">
-      <h1>ERC721R</h1>
-      <button
-        onClick={login}
-        className=" cursor-pointer bg-yellow-100  p-2 text-gray-800"
-      >
-        {account
-          ? `${account.slice(0, 4)} ... ${account.slice(
-              account.length - 3,
-              account.length
-            )}`
-          : 'Connect to Wallet'}
-      </button>
-    </nav>
+        <h1>ERC721R</h1>
+        <button
+          onClick={login}
+          className=" cursor-pointer bg-yellow-100  p-2 text-gray-800"
+        >
+          {account
+            ? `${account.slice(0, 4)} ... ${account.slice(
+                account.length - 3,
+                account.length
+              )}`
+            : 'Connect to Wallet'}
+        </button>
+      </nav>
 
-    
-      <main className=" flex w-full flex-col text-black items-center justify-center">
+      <main className=" flex w-full flex-col items-center justify-center gap-4 text-white ">
+        
+          <TextField
+            required
+            id="standard-required"
+            label="collection name"
+            defaultValue="Hello World"
+            variant="standard"
+            value={name}
+            onChange={(e) => setname(e.currentTarget.value)}
+            colour="secondary"
+          />
+          <TextField
+            required
+            id="standard-required"
+            label="collection Symbol"
+            defaultValue="Hello World"
+            variant="standard"
+            value={symbol}
+            placeholder=""
+            onChange={(e) => setsymbol(e.currentTarget.value)}
+          />
+          <TextField
+            required
+            id="standard-required"
+            label="baseURI"
+            defaultValue="Hello World"
+            variant="standard"
+            value={baseURI}
+            placeholder=""
+            onChange={(e) => setbaseURI(e.currentTarget.value)}
+          />
 
-       <input type="text" value={name} placeholder='collection name'  onChange={(e)=> setname(e.currentTarget.value)} />
-       <input type="text" value={symbol} placeholder='collection Symbol' onChange={(e)=> setsymbol(e.currentTarget.value)}/>
-       <input type="number" value={collectionSize} placeholder='collection Size' onChange={(e)=> setcollectionSize(e.currentTarget.value)}/>
-       <input type="number" value={maxMintPerAddress} placeholder='Max mint per address' onChange={(e)=> setmaxMintPerAddress(e.currentTarget.value)}/>
-       <input type="number" value={mintStartTime} placeholder='Start time' onChange={(e)=> setmintStartTime(e.currentTarget.value)}/>
-       <input type="number" value={mintEndTime} placeholder='end time' onChange={(e)=> setmintEndTime(e.currentTarget.value)}/>
-       <input type="number" value={mintPrice} placeholder='price in Matic' onChange={(e)=> setmintPrice(e.currentTarget.value)}/>
-       <input type="text" value={baseURI} placeholder='baseURI' onChange={(e)=> setbaseURI(e.currentTarget.value)}/> 
-       {/* ipfs://QmXLrHE5QRRC1PYXNBqfkguuYc7DvKhboNp1BQDZLJGhjV/ */}
-        <h2>{addressOfDeployedContract}</h2>
+          <TextField
+            id="standard-number"
+            label="collection Size"
+            type="number"
+            value={collectionSize}
+            onChange={(e) => setcollectionSize(e.currentTarget.value)}
+            InputLabelProps={{
+              shrink: true,
+            }}
+            variant="standard"
+          />
+          <TextField
+            id="standard-number"
+            label="Max mint per address"
+            type="number"
+            value={maxMintPerAddress}
+            placeholder=""
+            onChange={(e) => setmaxMintPerAddress(e.currentTarget.value)}
+            InputLabelProps={{
+              shrink: true,
+            }}
+            variant="standard"
+          />
+          <TextField
+            id="standard-number"
+            label="Start time"
+            type="number"
+            value={mintStartTime}
+            placeholder=""
+            onChange={(e) => setmintStartTime(e.currentTarget.value)}
+            InputLabelProps={{
+              shrink: true,
+            }}
+            variant="standard"
+          />
+          <TextField
+            id="standard-number"
+            label="end time"
+            type="number"
+            value={mintEndTime}
+            placeholder=""
+            onChange={(e) => setmintEndTime(e.currentTarget.value)}
+            InputLabelProps={{
+              shrink: true,
+            }}
+            variant="standard"
+          />
+          <TextField
+            id="standard-number"
+            label="price in Matic"
+            type="number"
+            value={mintPrice}
+            placeholder=""
+            onChange={(e) => setmintPrice(e.currentTarget.value)}
+            InputLabelProps={{
+              shrink: true,
+            }}
+            variant="standard"
+          />
+       
+        {/* ipfs://QmXLrHE5QRRC1PYXNBqfkguuYc7DvKhboNp1BQDZLJGhjV/ */}
 
-        <h3>make sure to save the arguments somewhere if you want to verify your collection contract</h3>
-        <div className="flex p-5 "> 
-            <button onClick={createCollection} className="m-5 cursor-pointer  rounded border bg-gradient-to-r from-pink-500/70 to-yellow-500/50 py-2 px-4 font-semibold text-white shadow-lg shadow-red-500 hover:shadow-md hover:shadow-yellow-300/50">
-              Mint
-            </button>
-
+        <div className="flex p-5 ">
+          <button
+            onClick={createCollection}
+            className="m-5 cursor-pointer  rounded border bg-gradient-to-r from-pink-500/70 to-yellow-500/50 py-2 px-4 font-semibold text-white shadow-lg shadow-red-500 hover:shadow-md hover:shadow-yellow-300/50"
+          >
+            Mint
+          </button>
         </div>
       </main>
-      <link
-        rel="stylesheet"
-        href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
-      />
-      <link
-        rel="stylesheet"
-        href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      />
+      {error && (
+        <p className="bg-red-700 text-center font-medium text-white opacity-60 ">
+          TRANSACTION FAILED: {error.message}
+        </p>
+      )}
+      
+      {isLoading && (
+        <div className="flex items-center justify-center">loading....</div>
+      )}
+      {!error && addressOfDeployedContract && (
+        <div>
+          {' '}
+          <h2>Contract Address: {addressOfDeployedContract}</h2>
+          <a
+            href={`https://mumbai.polygonscan.com/address/{addressOfDeployedContract}`}
+            target="_blank"
+          >
+            `https://mumbai.polygonscan.com/address/${addressOfDeployedContract}
+            `
+          </a>{' '}
+      <h3>Steps You need To perform now.</h3>
+      <ol>
+        <li>
+          Verify your Contract collection address and click on the button
+          <a
+            href={`https://mumbai.polygonscan.com/verifyContract?a=${addressOfDeployedContract}`}
+            target="_black"
+          />
+        </li>
+      </ol>
+        </div>
+      )}
     </div>
   )
 }
