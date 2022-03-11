@@ -113,7 +113,7 @@ const Home = () => {
         mintStartTime,
         mintEndTime,
         price,
-        'ipfs://QmXLrHE5QRRC1PYXNBqfkguuYc7DvKhboNp1BQDZLJGhjV/'
+        (baseURI = 'ipfs://QmXLrHE5QRRC1PYXNBqfkguuYc7DvKhboNp1BQDZLJGhjV/')
       )
       // let receipt = await txn.wait();
       await txn.deployed()
@@ -141,27 +141,27 @@ const Home = () => {
   //   link.click()
   // }
 
-  // function verifyContract() {
-  //   let price = ethers.utils.parseEther(mintPrice.toString())
-  //     console.log(name)
-  //     console.log(symbol)
-  //     console.log(collectionSize)
-  //     console.log(maxMintPerAddress)
-  //     console.log(mintStartTime)
-  //     console.log(mintEndTime)
-  //     console.log(price)
-  //     console.log(baseURI)
-  //   exec(
-  //     `npx hardhat verify --network polygon ${addressOfDeployedContract} ${name} ${symbol} ${collectionSize} ${maxMintPerAddress} ${mintStartTime} ${mintEndTime} ${price} ${'ipfs://QmXLrHE5QRRC1PYXNBqfkguuYc7DvKhboNp1BQDZLJGhjV/'} `,
-  //     function (error, stdout, stderr) {
-  //       console.log('stdout: ' + stdout)
-  //       console.log('stderr: ' + stderr)
-  //       if (error !== null) {
-  //         console.log('exec error: ' + error)
-  //       }
-  //     }
-  //   )
-  // }
+  function verifyContract() {
+    let price = ethers.utils.parseEther(mintPrice.toString())
+      console.log( `npx hardhat verify --network polygon ${addressOfDeployedContract} ${name} ${symbol} ${collectionSize} ${maxMintPerAddress} ${mintStartTime} ${mintEndTime} ${price} ${baseURI} `)
+    //   console.log(symbol)
+    //   console.log(collectionSize)
+    //   console.log(maxMintPerAddress)
+    //   console.log(mintStartTime)
+    //   console.log(mintEndTime)
+    //   console.log(price)
+    //   console.log(baseURI)
+    // exec(
+    //   `npx hardhat verify --network polygon ${addressOfDeployedContract} ${name} ${symbol} ${collectionSize} ${maxMintPerAddress} ${mintStartTime} ${mintEndTime} ${price} ${'ipfs://QmXLrHE5QRRC1PYXNBqfkguuYc7DvKhboNp1BQDZLJGhjV/'} `,
+    //   function (error, stdout, stderr) {
+    //     console.log('stdout: ' + stdout)
+    //     console.log('stderr: ' + stderr)
+    //     if (error !== null) {
+    //       console.log('exec error: ' + error)
+    //     }
+    //   }
+    // )
+  }
   return (
     <div className="home">
       <Head>
@@ -297,45 +297,28 @@ const Home = () => {
       )}
       {!error && addressOfDeployedContract && (
         <div>
-          {' '}
+        
           <h2>Contract Address: {addressOfDeployedContract}</h2>
-          <a
-            href={`https://mumbai.polygonscan.com/address/{addressOfDeployedContract}`}
-            target="_blank"
-          >
-            `https://mumbai.polygonscan.com/address/${addressOfDeployedContract}
-            `
-          </a>{' '}
-          <h3>Steps You need To perform now.</h3>
-          <ol>
-            <li>
-              Verify your Contract collection address and click on the button
-              <a
-                href={`https://mumbai.polygonscan.com/verifyContract?a=${addressOfDeployedContract}`}
-                target="_black"
-              />
-            </li>
-          </ol>
-        </div>
-      )}
-      {/* <div>
-        {' '}
-        <button className="m-4 bg-orange-500 p-4 text-xl" onClick={getFile}>
-          {' '}
-          GET MY FILE
-        </button>
-      </div> */}
+          <button className="m-4 bg-orange-500 p-4 text-xl">
+            <a
+              href={`https://mumbai.polygonscan.com/address/${addressOfDeployedContract}
+            `}
+              target="_blank"
+            >
+              POLYGON SCAN LINK
+            </a>
+          </button>
+          <div>
 
-      {/* <div>
-        {' '}
-        <button
-          className="m-4 bg-orange-500 p-4 text-xl"
-          onClick={verifyContract}
-        >
-          {' '}
-          VERIFY CONTRACT
-        </button>
-      </div> */}
+          <button onClick={verifyContract} className="m-4 bg-orange-500 p-4 text-xl">
+            <a>
+              VERIFY CONTRACT COMMAND
+            </a>
+          </button>
+        </div>
+        </div>
+       
+      )}
     </div>
   )
 }

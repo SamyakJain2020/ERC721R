@@ -855,6 +855,10 @@ contract ERC721R is
     mapping(address => bool) eligibleForReward;
 
     constructor(
+        // "samy",
+        // "sam",
+        // "samy.com",
+        // 400,
         string memory name_,
         string memory symbol_,
         uint256 _collectionSize,

@@ -14,8 +14,7 @@ import '@openzeppelin/contracts/utils/Address.sol';
 import '@openzeppelin/contracts/utils/Context.sol';
 import '@openzeppelin/contracts/utils/Strings.sol';
 import '@openzeppelin/contracts/utils/introspection/ERC165.sol';
-import "@openzeppelin/contracts/access/Ownable.sol";
-
+import '@openzeppelin/contracts/access/Ownable.sol';
 
 // import "@chainlink/contracts/src/v0.8/VRFConsumerBase.sol";
 // import "@chainlink/contracts/src/v0.8/ConfirmedOwner.sol";
@@ -48,7 +47,14 @@ import "@openzeppelin/contracts/access/Ownable.sol";
  *
  * Assumes that an owner cannot have more than the 2**128 - 1 (max value of uint128) of supply
  */
-contract ERC721R is   Context, ERC165, IERC721, IERC721Metadata, IERC721Enumerable, Ownable{
+contract ERC721R is
+    Context,
+    ERC165,
+    IERC721,
+    IERC721Metadata,
+    IERC721Enumerable,
+    Ownable
+{
     using Address for address;
     using Strings for uint256;
 
@@ -66,22 +72,24 @@ contract ERC721R is   Context, ERC165, IERC721, IERC721Metadata, IERC721Enumerab
 
     // Token name
     string private _name;
-    uint luckyMinters = 100;
-    uint mintStartTime;
-    uint collectionSize;
-    uint mintEndTime;
-    uint mintPrice;
-    uint poolBalance;
+    uint256 luckyMinters = 100;
+    uint256 mintStartTime;
+    uint256 collectionSize;
+    uint256 mintEndTime;
+    uint256 mintPrice;
+    uint256 poolBalance;
     string baseURI;
 
     // Token symbol
     string private _symbol;
-      mapping(address=> uint) availableMints;
+    mapping(address => uint256) availableMints;
 
-     modifier maxMintsPerAdd(uint256 numberOfTokens) {
+    modifier maxMintsPerAdd(uint256 numberOfTokens) {
         require(
-            maxMintPerAddress - availableMints[msg.sender] >= 0 && numberOfTokens <= maxMintPerAddress - availableMints[msg.sender],
-            "Max mints per transaction exceeded"
+            maxMintPerAddress - availableMints[msg.sender] >= 0 &&
+                numberOfTokens <=
+                maxMintPerAddress - availableMints[msg.sender],
+            'Max mints per transaction exceeded'
         );
         _;
     }
@@ -99,10 +107,19 @@ contract ERC721R is   Context, ERC165, IERC721, IERC721Metadata, IERC721Enumerab
     // Mapping from owner to operator approvals
     mapping(address => mapping(address => bool)) private _operatorApprovals;
 
-    uint maxMintPerAddress;
+    uint256 maxMintPerAddress;
     mapping(address => bool) eligibleForReward;
 
-    constructor(string memory name_, string memory symbol_, uint _collectionSize, uint _maxMintPerAddress,uint _mintStartTime, uint _mintEndTime, uint _mintPrice, string memory baseURI_) {
+    constructor(
+        string memory name_,
+        string memory symbol_,
+        uint256 _collectionSize,
+        uint256 _maxMintPerAddress,
+        uint256 _mintStartTime,
+        uint256 _mintEndTime,
+        uint256 _mintPrice,
+        string memory baseURI_
+    ) {
         require(_mintEndTime > _mintStartTime);
         _name = name_;
         _symbol = symbol_;
@@ -112,8 +129,6 @@ contract ERC721R is   Context, ERC165, IERC721, IERC721Metadata, IERC721Enumerab
         mintPrice = _mintPrice;
         maxMintPerAddress = _maxMintPerAddress;
         baseURI = baseURI_;
-
-
     }
 
     /**
@@ -123,11 +138,40 @@ contract ERC721R is   Context, ERC165, IERC721, IERC721Metadata, IERC721Enumerab
         return _currentIndex;
     }
 
+    function getMintStartTime() public view returns (uint256) {
+        return mintStartTime;
+    }
+
+    function getMintEndTime() public view returns (uint256) {
+        return mintEndTime;
+    }
+
+    function getMintPrice() public view returns (uint256) {
+        return mintPrice;
+    }
+
+    function getCollectionSize() public view returns (uint256) {
+        return collectionSize;
+    }
+
+    function getPoolBalance() public view returns (uint256) {
+        return poolBalance;
+    }
+
+    function getBaseURI() public view returns (string memory) {
+        return baseURI;
+    }
+
     /**
      * @dev See {IERC721Enumerable-tokenByIndex}.
      */
-    function tokenByIndex(uint256 index) public view override returns (uint256) {
-        if (index >= totalSupply()) revert ("TokenIndexOutOfBounds");
+    function tokenByIndex(uint256 index)
+        public
+        view
+        override
+        returns (uint256)
+    {
+        if (index >= totalSupply()) revert('TokenIndexOutOfBounds');
         return index;
     }
 
@@ -136,8 +180,13 @@ contract ERC721R is   Context, ERC165, IERC721, IERC721Metadata, IERC721Enumerab
      * This read function is O(totalSupply). If calling from a separate contract, be sure to test gas first.
      * It may also degrade with extremely large collection sizes (e.g >> 10000), test for your use case.
      */
-    function tokenOfOwnerByIndex(address owner, uint256 index) public view override returns (uint256) {
-        if (index >= balanceOf(owner)) revert ("TokenIndexOutOfBounds");
+    function tokenOfOwnerByIndex(address owner, uint256 index)
+        public
+        view
+        override
+        returns (uint256)
+    {
+        if (index >= balanceOf(owner)) revert('TokenIndexOutOfBounds');
         uint256 numMintedSoFar = totalSupply();
         uint256 tokenIdsIdx;
         address currOwnershipAddr;
@@ -165,7 +214,13 @@ contract ERC721R is   Context, ERC165, IERC721, IERC721Metadata, IERC721Enumerab
     /**
      * @dev See {IERC165-supportsInterface}.
      */
-    function supportsInterface(bytes4 interfaceId) public view virtual override(ERC165, IERC165) returns (bool) {
+    function supportsInterface(bytes4 interfaceId)
+        public
+        view
+        virtual
+        override(ERC165, IERC165)
+        returns (bool)
+    {
         return
             interfaceId == type(IERC721).interfaceId ||
             interfaceId == type(IERC721Metadata).interfaceId ||
@@ -177,12 +232,12 @@ contract ERC721R is   Context, ERC165, IERC721, IERC721Metadata, IERC721Enumerab
      * @dev See {IERC721-balanceOf}.
      */
     function balanceOf(address owner) public view override returns (uint256) {
-        if (owner == address(0)) revert ("owner can't be 0 address");
+        if (owner == address(0)) revert("owner can't be 0 address");
         return uint256(_addressData[owner].balance);
     }
 
     function _numberMinted(address owner) internal view returns (uint256) {
-        if (owner == address(0)) revert ("owner can't be 0 address");
+        if (owner == address(0)) revert("owner can't be 0 address");
         return uint256(_addressData[owner].numberMinted);
     }
 
@@ -190,11 +245,15 @@ contract ERC721R is   Context, ERC165, IERC721, IERC721Metadata, IERC721Enumerab
      * Gas spent here starts off proportional to the maximum mint batch size.
      * It gradually moves to O(1) as tokens get transferred around in the collection over time.
      */
-    function ownershipOf(uint256 tokenId) internal view returns (TokenOwnership memory) {
-        if (!_exists(tokenId)) revert ("Token Does not exist");
+    function ownershipOf(uint256 tokenId)
+        internal
+        view
+        returns (TokenOwnership memory)
+    {
+        if (!_exists(tokenId)) revert('Token Does not exist');
 
         unchecked {
-            for (uint256 curr = tokenId;; curr--) {
+            for (uint256 curr = tokenId; ; curr--) {
                 TokenOwnership memory ownership = _ownerships[curr];
                 if (ownership.addr != address(0)) {
                     return ownership;
@@ -227,11 +286,20 @@ contract ERC721R is   Context, ERC165, IERC721, IERC721Metadata, IERC721Enumerab
     /**
      * @dev See {IERC721Metadata-tokenURI}.
      */
-    function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
-        if (!_exists(tokenId)) revert ("Token Does not exist");
+    function tokenURI(uint256 tokenId)
+        public
+        view
+        virtual
+        override
+        returns (string memory)
+    {
+        if (!_exists(tokenId)) revert('Token Does not exist');
 
         string memory baseUri = _baseURI();
-        return bytes(baseUri).length != 0 ? string(abi.encodePacked(baseUri, tokenId.toString(), ".json")) : '';
+        return
+            bytes(baseUri).length != 0
+                ? string(abi.encodePacked(baseUri, tokenId.toString(), '.json'))
+                : '';
     }
 
     function setBaseURI(string memory _baseUri) public onlyOwner {
@@ -252,9 +320,10 @@ contract ERC721R is   Context, ERC165, IERC721, IERC721Metadata, IERC721Enumerab
      */
     function approve(address to, uint256 tokenId) public override {
         address owner = ERC721R.ownerOf(tokenId);
-        if (to == owner) revert ("can't approve to self");
+        if (to == owner) revert("can't approve to self");
 
-        if (_msgSender() != owner && !isApprovedForAll(owner, _msgSender())) revert ("TokenIndexOutOfBounds");
+        if (_msgSender() != owner && !isApprovedForAll(owner, _msgSender()))
+            revert('TokenIndexOutOfBounds');
 
         _approve(to, tokenId, owner);
     }
@@ -262,8 +331,13 @@ contract ERC721R is   Context, ERC165, IERC721, IERC721Metadata, IERC721Enumerab
     /**
      * @dev See {IERC721-getApproved}.
      */
-    function getApproved(uint256 tokenId) public view override returns (address) {
-        if (!_exists(tokenId)) revert ("token does not exist");
+    function getApproved(uint256 tokenId)
+        public
+        view
+        override
+        returns (address)
+    {
+        if (!_exists(tokenId)) revert('token does not exist');
 
         return _tokenApprovals[tokenId];
     }
@@ -271,8 +345,11 @@ contract ERC721R is   Context, ERC165, IERC721, IERC721Metadata, IERC721Enumerab
     /**
      * @dev See {IERC721-setApprovalForAll}.
      */
-    function setApprovalForAll(address operator, bool approved) public override {
-        if (operator == _msgSender()) revert ("can't approve to self");
+    function setApprovalForAll(address operator, bool approved)
+        public
+        override
+    {
+        if (operator == _msgSender()) revert("can't approve to self");
 
         _operatorApprovals[_msgSender()][operator] = approved;
         emit ApprovalForAll(_msgSender(), operator, approved);
@@ -281,7 +358,13 @@ contract ERC721R is   Context, ERC165, IERC721, IERC721Metadata, IERC721Enumerab
     /**
      * @dev See {IERC721-isApprovedForAll}.
      */
-    function isApprovedForAll(address owner, address operator) public view virtual override returns (bool) {
+    function isApprovedForAll(address owner, address operator)
+        public
+        view
+        virtual
+        override
+        returns (bool)
+    {
         return _operatorApprovals[owner][operator];
     }
 
@@ -308,11 +391,11 @@ contract ERC721R is   Context, ERC165, IERC721, IERC721Metadata, IERC721Enumerab
     }
 
     fallback() external payable {
-     poolBalance += msg.value;
+        poolBalance += msg.value;
     }
 
     function addMoneyToPool() external payable {
-        require(msg.value> 0, "value should be greater than 0");
+        require(msg.value > 0, 'value should be greater than 0');
         poolBalance += msg.value;
     }
 
@@ -326,7 +409,8 @@ contract ERC721R is   Context, ERC165, IERC721, IERC721Metadata, IERC721Enumerab
         bytes memory _data
     ) public override {
         _transfer(from, to, tokenId);
-        if (!_checkOnERC721Received(from, to, tokenId, _data)) revert ("TokenIndexOutOfBounds");
+        if (!_checkOnERC721Received(from, to, tokenId, _data))
+            revert('TokenIndexOutOfBounds');
     }
 
     /**
@@ -361,37 +445,46 @@ contract ERC721R is   Context, ERC165, IERC721, IERC721Metadata, IERC721Enumerab
     ) internal {
         _mint(to, quantity, _data, true);
     }
-    
-    function mint(
-        address to,
-        uint256 quantity
-    ) public virtual payable maxMintsPerAdd(quantity){
-       require(msg.value >= mintPrice, "value is less than mint price");
-        _mint(to, quantity, "", true);
-       if(totalSupply() < luckyMinters) {
-        eligibleForReward[msg.sender] = true;
-       }
-    }
-    function claimRefund() public {
-        require(block.timestamp > mintEndTime, "mint not ended yet");
-        require(totalSupply() < collectionSize, "not eligible for refund");
-        require(balanceOf(msg.sender) > 0 , "not eligible as you don't have the nft");
-        // require(block.timestamp <= mintEndTime + 7*24*60*60);
-         _transfer(msg.sender, address(this), balanceOf(msg.sender));
-        payable(msg.sender).transfer(mintPrice*balanceOf(msg.sender));
 
-        if(eligibleForReward[msg.sender] == true && balanceOf(msg.sender) > 0) {
-        uint leftMint = 100 - totalSupply();
-        uint amount = poolBalance/leftMint;
-        payable(msg.sender).transfer(amount);
+    function mint(address to, uint256 quantity)
+        public
+        payable
+        virtual
+        maxMintsPerAdd(quantity)
+    {
+        require(msg.value >= mintPrice, 'value is less than mint price');
+        _mint(to, quantity, '', true);
+        if (totalSupply() < luckyMinters) {
+            eligibleForReward[msg.sender] = true;
         }
-
-        
     }
 
-    function withdraw() public view onlyOwner{
-        require(block.timestamp > mintEndTime + 7*24*60*60, "you can only withdraw after a week after the end of mint");
-        require(totalSupply() >= collectionSize, "not eligible for withdrawal");
+    function claimRefund() public {
+        require(block.timestamp > mintEndTime, 'mint not ended yet');
+        require(totalSupply() < collectionSize, 'not eligible for refund');
+        require(
+            balanceOf(msg.sender) > 0,
+            "not eligible as you don't have the nft"
+        );
+        // require(block.timestamp <= mintEndTime + 7*24*60*60);
+        _transfer(msg.sender, address(this), balanceOf(msg.sender));
+        payable(msg.sender).transfer(mintPrice * balanceOf(msg.sender));
+
+        if (
+            eligibleForReward[msg.sender] == true && balanceOf(msg.sender) > 0
+        ) {
+            uint256 leftMint = 100 - totalSupply();
+            uint256 amount = poolBalance / leftMint;
+            payable(msg.sender).transfer(amount);
+        }
+    }
+
+    function withdraw() public view onlyOwner {
+        require(
+            block.timestamp > mintEndTime + 7 * 24 * 60 * 60,
+            'you can only withdraw after a week after the end of mint'
+        );
+        require(totalSupply() >= collectionSize, 'not eligible for withdrawal');
     }
 
     /**
@@ -404,20 +497,18 @@ contract ERC721R is   Context, ERC165, IERC721, IERC721Metadata, IERC721Enumerab
      *
      * Emits a {Transfer} event.
      */
-     
+
     function _mint(
         address to,
         uint256 quantity,
         bytes memory _data,
         bool safe
-    ) private  maxMintsPerAdd(quantity){
+    ) private maxMintsPerAdd(quantity) {
         uint256 startTokenId = _currentIndex;
-        if (to == address(0)) revert ("TokenIndexOutOfBounds");
-        if (quantity == 0) revert("TokenIndexOutOfBounds");
+        if (to == address(0)) revert('TokenIndexOutOfBounds');
+        if (quantity == 0) revert('TokenIndexOutOfBounds');
         require(block.timestamp >= mintStartTime);
         require(block.timestamp <= mintEndTime);
-        
-        
 
         _beforeTokenTransfers(address(0), to, startTokenId, quantity);
 
@@ -435,8 +526,11 @@ contract ERC721R is   Context, ERC165, IERC721, IERC721Metadata, IERC721Enumerab
 
             for (uint256 i; i < quantity; i++) {
                 emit Transfer(address(0), to, updatedIndex);
-                if (safe && !_checkOnERC721Received(address(0), to, updatedIndex, _data)) {
-                    revert ("TokenIndexOutOfBounds");
+                if (
+                    safe &&
+                    !_checkOnERC721Received(address(0), to, updatedIndex, _data)
+                ) {
+                    revert('TokenIndexOutOfBounds');
                 }
 
                 updatedIndex++;
@@ -469,9 +563,9 @@ contract ERC721R is   Context, ERC165, IERC721, IERC721Metadata, IERC721Enumerab
             getApproved(tokenId) == _msgSender() ||
             isApprovedForAll(prevOwnership.addr, _msgSender()));
 
-        if (!isApprovedOrOwner) revert ("TokenIndexOutOfBounds");
-        if (prevOwnership.addr != from) revert ("TokenIndexOutOfBounds");
-        if (to == address(0)) revert ("TokenIndexOutOfBounds");
+        if (!isApprovedOrOwner) revert('TokenIndexOutOfBounds');
+        if (prevOwnership.addr != from) revert('TokenIndexOutOfBounds');
+        if (to == address(0)) revert('TokenIndexOutOfBounds');
 
         _beforeTokenTransfers(from, to, tokenId, 1);
 
@@ -494,7 +588,8 @@ contract ERC721R is   Context, ERC165, IERC721, IERC721Metadata, IERC721Enumerab
             if (_ownerships[nextTokenId].addr == address(0)) {
                 if (_exists(nextTokenId)) {
                     _ownerships[nextTokenId].addr = prevOwnership.addr;
-                    _ownerships[nextTokenId].startTimestamp = prevOwnership.startTimestamp;
+                    _ownerships[nextTokenId].startTimestamp = prevOwnership
+                        .startTimestamp;
                 }
             }
         }
@@ -534,10 +629,17 @@ contract ERC721R is   Context, ERC165, IERC721, IERC721Metadata, IERC721Enumerab
         bytes memory _data
     ) private returns (bool) {
         if (to.isContract()) {
-            try IERC721Receiver(to).onERC721Received(_msgSender(), from, tokenId, _data) returns (bytes4 retval) {
+            try
+                IERC721Receiver(to).onERC721Received(
+                    _msgSender(),
+                    from,
+                    tokenId,
+                    _data
+                )
+            returns (bytes4 retval) {
                 return retval == IERC721Receiver(to).onERC721Received.selector;
             } catch (bytes memory reason) {
-                if (reason.length == 0) revert("TokenIndexOutOfBounds");
+                if (reason.length == 0) revert('TokenIndexOutOfBounds');
                 else {
                     assembly {
                         revert(add(32, reason), mload(reason))
@@ -586,5 +688,4 @@ contract ERC721R is   Context, ERC165, IERC721, IERC721Metadata, IERC721Enumerab
         uint256 startTokenId,
         uint256 quantity
     ) internal virtual {}
-
 }
